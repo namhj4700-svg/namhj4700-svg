@@ -26,7 +26,7 @@
 **3. 프로젝트**
 
   **날씨 알리미 웹앱**
-  Python과 OpenWraterMap API를 이용해 만든 날씨 조회 서비스예요.
+ JavaScript과 OpenWraterMap API를 이용해 만든 날씨 조회 서비스예요.
 
   ```javascript
 # 날씨 API 호출 예시
