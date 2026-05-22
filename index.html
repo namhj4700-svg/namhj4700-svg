@@ -296,20 +296,67 @@
        3. 기술 스택 섹션
     ──────────────────────────── */
     .skills-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 1.1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.6rem;
     }
 
-    .skill-card { }
+    .skill-card {
+      display: flex;
+      flex-direction: column;
+      gap: .85rem;
+    }
     .skill-card-header {
       display: flex;
       align-items: center;
-      gap: .6rem;
-      margin-bottom: .9rem;
+      gap: .55rem;
     }
-    .skill-icon { font-size: 1.15rem; width: 28px; text-align: center; }
-    .skill-tags { display: flex; flex-wrap: wrap; gap: .4rem; }
+    .skill-icon { font-size: 1.1rem; width: 26px; text-align: center; }
+    .skill-card h3 {
+      font-size: 1rem;
+      color: var(--heading);
+      margin: 0;
+      padding-bottom: .55rem;
+      border-bottom: 1px solid var(--border);
+      width: 100%;
+    }
+    .skill-tags { display: flex; flex-wrap: wrap; gap: .55rem; }
+
+    /* 배지 스타일 */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: .35rem;
+      font-family: var(--sans);
+      font-size: .88rem;
+      font-weight: 700;
+      padding: .38rem .9rem;
+      border-radius: 999px;
+      border: 1.5px solid;
+      cursor: default;
+      transition: transform .18s ease, box-shadow .18s ease, filter .18s ease;
+      user-select: none;
+    }
+    .badge:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,.12);
+      filter: brightness(1.08);
+    }
+    .badge.green {
+      color: #2d6e2d;
+      background: rgba(58,122,58,.1);
+      border-color: rgba(58,122,58,.35);
+    }
+    .badge.blue {
+      color: var(--link);
+      background: rgba(91,91,255,.09);
+      border-color: rgba(91,91,255,.3);
+    }
+    .badge.gray {
+      color: var(--caption);
+      background: rgba(158,146,112,.1);
+      border-color: rgba(158,146,112,.35);
+    }
 
     /* ────────────────────────────
        4. 프로젝트 섹션
@@ -623,9 +670,8 @@
   <!-- ════════════════════════════
        3. 기술 스택 섹션
        - skill-card 하나 = 카테고리 하나
-       - tag 안에 사용 기술명을 넣으세요.
-       - tag.green: 자신있는 기술 / tag.blue: 학습 중인 기술 / tag: 기본
-       - 카드를 추가하거나 삭제해서 자유롭게 구성하세요.
+       - badge.green: 사용 가능 / badge.blue: 학습 중 / badge.gray: 학습 예정
+       - 배지를 추가하거나 삭제해서 자유롭게 구성하세요.
   ════════════════════════════ -->
   <section id="skills">
     <div class="container">
@@ -634,56 +680,49 @@
       <div class="skills-grid">
 
         <!-- 언어 카드 -->
-        <div class="card skill-card">
+        <div class="skill-card">
           <div class="skill-card-header">
             <span class="skill-icon">💻</span>
             <h3>언어</h3>
           </div>
           <div class="skill-tags">
-            <!-- 사용 가능한 언어를 tag로 추가하세요 -->
-            <span class="tag green">Python</span>
-            <span class="tag">Dart (Flutter)</span>
-            <!-- 예: <span class="tag green">Java</span> -->
+            <span class="badge green">🐍 Python</span>
+            <span class="badge gray">🎯 Dart (Flutter)</span>
           </div>
         </div>
 
         <!-- 프레임워크 카드 -->
-        <div class="card skill-card">
+        <div class="skill-card">
           <div class="skill-card-header">
             <span class="skill-icon">🌿</span>
             <h3>프레임워크</h3>
           </div>
           <div class="skill-tags">
-            <!-- 학습 중인 것은 tag.blue 로 표시 -->
-            <span class="tag blue">Django (학습 예정)</span>
-            <span class="tag blue">FastAPI (학습 예정)</span>
-            <span class="tag">Flutter (기초)</span>
+            <span class="badge gray">🎯 Flutter (기초)</span>
+            <span class="badge blue">📘 Django (학습 예정)</span>
+            <span class="badge blue">📘 FastAPI (학습 예정)</span>
           </div>
         </div>
 
         <!-- 데이터베이스 카드 -->
-        <div class="card skill-card">
+        <div class="skill-card">
           <div class="skill-card-header">
             <span class="skill-icon">🗄️</span>
             <h3>데이터베이스</h3>
           </div>
           <div class="skill-tags">
-            <!-- 학습 예정 기술을 추가하세요 -->
-            <span class="tag blue">SQL (학습 예정)</span>
-            <!-- 예: <span class="tag green">MySQL</span> -->
+            <span class="badge blue">📘 SQL (학습 예정)</span>
           </div>
         </div>
 
         <!-- 도구 카드 -->
-        <div class="card skill-card">
+        <div class="skill-card">
           <div class="skill-card-header">
             <span class="skill-icon">🔧</span>
             <h3>도구</h3>
           </div>
           <div class="skill-tags">
-            <!-- 사용하는 도구를 추가하세요 -->
-            <span class="tag blue">Git (학습 예정)</span>
-            <!-- 예: <span class="tag green">VS Code</span> -->
+            <span class="badge blue">📘 Git (학습 예정)</span>
           </div>
         </div>
 
