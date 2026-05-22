@@ -361,64 +361,134 @@
     /* ────────────────────────────
        4. 프로젝트 섹션
     ──────────────────────────── */
-    .projects-list { display: flex; flex-direction: column; gap: 1.1rem; }
+    .projects-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.3rem;
+    }
+    @media (min-width: 680px) {
+      .projects-grid { grid-template-columns: repeat(2, 1fr); }
+    }
 
-    .project-card { }
+    .project-card {
+      background: var(--bg-dark);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.6rem;
+      display: flex;
+      flex-direction: column;
+      gap: .75rem;
+      transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+      cursor: default;
+    }
+    .project-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0,0,0,.1);
+      border-color: var(--link);
+    }
+
     .project-meta {
       display: flex;
       align-items: center;
-      gap: .6rem;
-      margin-bottom: .5rem;
+      gap: .5rem;
     }
     .project-num {
       font-family: var(--sans);
-      font-size: .75rem;
+      font-size: .72rem;
       color: var(--caption);
-      letter-spacing: .08em;
+      letter-spacing: .1em;
     }
     .project-type {
       font-family: var(--sans);
-      font-size: .7rem;
+      font-size: .68rem;
       text-transform: uppercase;
       letter-spacing: .1em;
       color: var(--link);
       border: 1px solid rgba(91,91,255,.3);
+      background: rgba(91,91,255,.06);
       padding: .1rem .45rem;
-      border-radius: 2px;
+      border-radius: 999px;
     }
     .project-title {
       font-family: var(--serif);
       font-size: 1.15rem;
       font-weight: 700;
       color: var(--heading);
-      margin-bottom: .45rem;
+      line-height: 1.3;
     }
     .project-desc {
       font-size: .88rem;
       color: var(--caption);
-      margin-bottom: .9rem;
-      font-style: italic;
+      line-height: 1.6;
+      flex: 1;
     }
-    .project-footer {
+    .project-features {
+      list-style: none;
       display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: .7rem;
+      flex-direction: column;
+      gap: .3rem;
     }
-    .project-stack { display: flex; gap: .4rem; flex-wrap: wrap; }
-    .project-links { display: flex; gap: .4rem; flex-wrap: wrap; }
-    .project-link {
+    .project-features li {
       font-family: var(--sans);
-      font-size: .8rem;
-      color: var(--caption);
-      text-decoration: none;
-      border: 1px solid var(--border);
-      padding: .22rem .6rem;
-      border-radius: 2px;
-      transition: all .2s;
+      font-size: .82rem;
+      color: var(--body);
+      padding-left: 1rem;
+      position: relative;
     }
-    .project-link:hover { color: var(--link); border-color: var(--link); }
+    .project-features li::before {
+      content: '▸';
+      position: absolute;
+      left: 0;
+      color: var(--link);
+    }
+    .project-stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .4rem;
+    }
+    .project-divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: .2rem 0;
+    }
+    .project-links {
+      display: flex;
+      gap: .5rem;
+      flex-wrap: wrap;
+    }
+    .project-link {
+      display: inline-flex;
+      align-items: center;
+      gap: .3rem;
+      font-family: var(--sans);
+      font-size: .82rem;
+      font-weight: 700;
+      text-decoration: none;
+      padding: .35rem .85rem;
+      border-radius: 999px;
+      border: 1.5px solid;
+      transition: all .18s ease;
+    }
+    .project-link.github {
+      color: var(--body);
+      border-color: var(--bg-darker);
+      background: var(--bg);
+    }
+    .project-link.github:hover {
+      border-color: var(--heading);
+      color: var(--heading);
+      transform: translateY(-1px);
+    }
+    .project-link.demo {
+      color: var(--white);
+      background: var(--link);
+      border-color: var(--link);
+    }
+    .project-link.demo:hover {
+      background: var(--link-hover);
+      border-color: var(--link-hover);
+      transform: translateY(-1px);
+    }
 
     /* ────────────────────────────
        5. 경력 / 활동 섹션
@@ -734,22 +804,92 @@
   <!-- ════════════════════════════
        4. 프로젝트 섹션
        - project-card 하나 = 프로젝트 하나
-       - project-type: Personal / Team / 학원 프로젝트 등
-       - project-title: 프로젝트 이름
-       - project-desc: 어떤 프로젝트인지 한두 줄 설명
-       - project-stack: 사용 기술 태그
-       - project-link: GitHub 링크, 배포 링크 등
-       - 프로젝트가 생기면 아래 empty-note를 지우고 project-card를 추가하세요.
+       - project-type: Personal / Team
+       - 새 프로젝트 추가 시 project-card 블록을 복사해서 붙여넣으세요.
   ════════════════════════════ -->
   <section id="projects">
     <div class="container">
       <span class="label">// 프로젝트</span>
       <h2>Projects</h2>
-      <div class="projects-list">
+      <div class="projects-grid">
 
-        <!-- 프로젝트가 생기면 project-card를 이 아래에 추가하세요 -->
-        <div class="empty-note">
-          🚧 현재 프로젝트를 준비 중입니다. 완성되면 이 곳에 추가할 예정입니다.
+        <!-- 프로젝트 01: 퍼플 & 블랙 호버 투두 -->
+        <div class="project-card">
+          <div class="project-meta">
+            <span class="project-num">01</span>
+            <span class="project-type">Personal</span>
+          </div>
+          <div class="project-title">퍼플 &amp; 블랙 호버 투두</div>
+          <p class="project-desc">할 일을 추가하고 완료 처리할 수 있는 인터랙티브 투두리스트 앱입니다.</p>
+          <ul class="project-features">
+            <li>할 일 추가 및 삭제</li>
+            <li>완료 체크 기능</li>
+            <li>퍼플 &amp; 블랙 호버 효과 UI</li>
+            <li>모바일 대응 반응형 디자인</li>
+          </ul>
+          <hr class="project-divider" />
+          <div class="project-stack">
+            <span class="badge green">HTML</span>
+            <span class="badge green">CSS</span>
+            <span class="badge green">JavaScript</span>
+          </div>
+          <div class="project-links">
+            <!-- GitHub 주소가 생기면 href="#" 을 실제 주소로 교체하세요 -->
+            <a href="#" class="project-link github">⌥ GitHub</a>
+            <a href="https://2026-02-23.netlify.app/" target="_blank" class="project-link demo">▶ Live Demo</a>
+          </div>
+        </div>
+
+        <!-- 프로젝트 02: 자연 속 수학 여행 플래시카드 -->
+        <div class="project-card">
+          <div class="project-meta">
+            <span class="project-num">02</span>
+            <span class="project-type">Personal</span>
+          </div>
+          <div class="project-title">자연 속 수학 여행 — 플래시카드</div>
+          <p class="project-desc">자연을 테마로 한 수학 문제 플래시카드 학습 앱입니다. 씨앗을 심고 꽃을 피우는 방식으로 학습 진행도를 시각화했습니다.</p>
+          <ul class="project-features">
+            <li>플래시카드 형식의 수학 문제 풀기</li>
+            <li>정답/해설 표시 및 학습 진행도 추적</li>
+            <li>배경음악 재생 기능</li>
+            <li>문제 추가 및 관리 기능</li>
+          </ul>
+          <hr class="project-divider" />
+          <div class="project-stack">
+            <span class="badge green">HTML</span>
+            <span class="badge green">CSS</span>
+            <span class="badge green">JavaScript</span>
+          </div>
+          <div class="project-links">
+            <a href="#" class="project-link github">⌥ GitHub</a>
+            <a href="https://2026-03-16.netlify.app/" target="_blank" class="project-link demo">▶ Live Demo</a>
+          </div>
+        </div>
+
+        <!-- 프로젝트 03: 가계부 및 투자 조언 -->
+        <div class="project-card">
+          <div class="project-meta">
+            <span class="project-num">03</span>
+            <span class="project-type">Personal</span>
+          </div>
+          <div class="project-title">가계부 및 투자 조언</div>
+          <p class="project-desc">수입과 지출을 기록하고 관리할 수 있는 가계부 앱입니다. 재정 상황에 맞는 투자 조언 기능도 제공합니다.</p>
+          <ul class="project-features">
+            <li>수입 / 지출 내역 기록 및 관리</li>
+            <li>잔액 자동 계산</li>
+            <li>재정 상황 기반 투자 조언 제공</li>
+            <li>모바일 대응 반응형 디자인</li>
+          </ul>
+          <hr class="project-divider" />
+          <div class="project-stack">
+            <span class="badge green">HTML</span>
+            <span class="badge green">CSS</span>
+            <span class="badge green">JavaScript</span>
+          </div>
+          <div class="project-links">
+            <a href="#" class="project-link github">⌥ GitHub</a>
+            <a href="https://2026-04-13money.netlify.app/" target="_blank" class="project-link demo">▶ Live Demo</a>
+          </div>
         </div>
 
       </div>
