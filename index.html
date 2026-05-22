@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>namhj4700 | Backend Developer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #0a0c10;
+      --surface:  #111418;
+      --border:   #1e2530;
+      --accent:   #00e5a0;
+      --accent2:  #0077ff;
+      --muted:    #4a5568;
+      --text:     #c9d1d9;
+      --heading:  #e6edf3;
+      --red:      #ff4757;
+      --yellow:   #ffd32a;
+      --mono:     'JetBrains Mono', monospace;
+      --sans:     'Syne', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 14px;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ── SCROLLBAR ── */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 2px; }
+
+    /* ── NOISE OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 9999; opacity: .35;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 clamp(1.5rem, 5vw, 4rem);
+      height: 60px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(10,12,16,.85);
+      backdrop-filter: blur(12px);
+      z-index: 100;
+    }
+
+    .nav-logo {
+      font-family: var(--sans);
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--heading);
+      letter-spacing: -.02em;
+    }
+    .nav-logo span { color: var(--accent); }
+
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: .8rem;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      transition: color .2s;
+    }
+    .nav-links a:hover { color: var(--accent); }
+
+    /* ── LAYOUT ── */
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 clamp(1.5rem, 5vw, 4rem); }
+
+    section { padding: 100px 0; }
+
+    /* ── HERO ── */
+    #hero {
+      min-height: 100vh;
+      display: flex; align-items: center;
+      padding-top: 60px;
+      position: relative;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+      width: 100%;
+    }
+
+    .hero-tag {
+      display: inline-block;
+      font-size: .72rem;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      padding: .25rem .75rem;
+      border-radius: 2px;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-name {
+      font-family: var(--sans);
+      font-size: clamp(2.8rem, 6vw, 5rem);
+      font-weight: 800;
+      line-height: 1.05;
+      color: var(--heading);
+      letter-spacing: -.03em;
+      margin-bottom: 1rem;
+    }
+    .hero-name em { font-style: normal; color: var(--accent); }
+
+    .hero-desc {
+      color: var(--muted);
+      font-size: .9rem;
+      max-width: 420px;
+      margin-bottom: 2.5rem;
+      line-height: 1.9;
+    }
+
+    .hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+    .btn {
+      display: inline-flex; align-items: center; gap: .5rem;
+      padding: .65rem 1.4rem;
+      font-family: var(--mono);
+      font-size: .8rem;
+      letter-spacing: .05em;
+      text-decoration: none;
+      border-radius: 3px;
+      cursor: pointer;
+      transition: all .2s;
+      border: none;
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: #000;
+      font-weight: 700;
+    }
+    .btn-primary:hover { background: #00ffb3; transform: translateY(-1px); }
+    .btn-outline {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* Terminal card */
+    .terminal {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      animation: fadeUp .6s .2s both;
+    }
+    .terminal-bar {
+      background: #161b22;
+      padding: .6rem 1rem;
+      display: flex; align-items: center; gap: .5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .dot { width: 11px; height: 11px; border-radius: 50%; }
+    .dot-r { background: var(--red); }
+    .dot-y { background: var(--yellow); }
+    .dot-g { background: var(--accent); }
+    .terminal-body { padding: 1.4rem 1.4rem; font-size: .8rem; line-height: 2; }
+
+    .t-line { display: flex; gap: .6rem; }
+    .t-prompt { color: var(--accent); flex-shrink: 0; }
+    .t-cmd { color: var(--heading); }
+    .t-out { color: var(--muted); padding-left: 1.2rem; }
+    .t-out .hi { color: var(--accent2); }
+    .t-out .acc { color: var(--accent); }
+    .cursor {
+      display: inline-block; width: 8px; height: 14px;
+      background: var(--accent); vertical-align: middle;
+      animation: blink 1.1s step-end infinite;
+    }
+
+    @keyframes blink { 50% { opacity: 0; } }
+
+    /* hero glow */
+    #hero::after {
+      content: '';
+      position: absolute;
+      top: 20%; right: -10%;
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(0,229,160,.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    /* ── SECTION TITLE ── */
+    .section-label {
+      font-size: .7rem;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: .75rem;
+    }
+    .section-title {
+      font-family: var(--sans);
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 800;
+      color: var(--heading);
+      letter-spacing: -.03em;
+      margin-bottom: 3rem;
+    }
+
+    /* ── ABOUT ── */
+    #about { border-top: 1px solid var(--border); }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.5fr;
+      gap: 5rem;
+      align-items: start;
+    }
+
+    .about-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 1.8rem;
+    }
+    .about-card h3 {
+      font-family: var(--sans);
+      font-size: 1rem;
+      color: var(--heading);
+      margin-bottom: 1rem;
+    }
+    .about-stat {
+      display: flex; justify-content: space-between;
+      padding: .5rem 0;
+      border-bottom: 1px solid var(--border);
+      font-size: .8rem;
+    }
+    .about-stat:last-child { border-bottom: none; }
+    .about-stat .val { color: var(--accent); font-weight: 500; }
+
+    .about-text p { color: var(--muted); font-size: .88rem; margin-bottom: 1rem; }
+
+    /* ── SKILLS ── */
+    #skills { border-top: 1px solid var(--border); }
+
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .skill-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 1.6rem;
+      transition: border-color .2s, transform .2s;
+    }
+    .skill-card:hover { border-color: var(--accent); transform: translateY(-3px); }
+
+    .skill-card-header {
+      display: flex; align-items: center; gap: .75rem;
+      margin-bottom: 1.2rem;
+    }
+    .skill-icon {
+      width: 36px; height: 36px;
+      background: rgba(0,229,160,.08);
+      border: 1px solid rgba(0,229,160,.2);
+      border-radius: 4px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem;
+    }
+    .skill-card h3 {
+      font-family: var(--sans);
+      font-size: .95rem;
+      color: var(--heading);
+      font-weight: 700;
+    }
+
+    .skill-tags { display: flex; flex-wrap: wrap; gap: .5rem; }
+    .tag {
+      background: rgba(0,119,255,.08);
+      border: 1px solid rgba(0,119,255,.2);
+      color: var(--accent2);
+      padding: .2rem .65rem;
+      border-radius: 3px;
+      font-size: .72rem;
+      letter-spacing: .04em;
+    }
+    .tag.green {
+      background: rgba(0,229,160,.07);
+      border-color: rgba(0,229,160,.2);
+      color: var(--accent);
+    }
+
+    /* ── PROJECTS ── */
+    #projects { border-top: 1px solid var(--border); }
+
+    .projects-list { display: flex; flex-direction: column; gap: 1.5rem; }
+
+    .project-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 2rem;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 2rem;
+      align-items: start;
+      transition: border-color .2s;
+    }
+    .project-card:hover { border-color: var(--accent); }
+
+    .project-meta {
+      display: flex; align-items: center; gap: .75rem;
+      margin-bottom: .75rem;
+    }
+    .project-num {
+      font-size: .7rem;
+      color: var(--muted);
+      letter-spacing: .1em;
+    }
+    .project-type {
+      font-size: .68rem;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      color: var(--accent);
+      background: rgba(0,229,160,.07);
+      border: 1px solid rgba(0,229,160,.15);
+      padding: .15rem .55rem;
+      border-radius: 2px;
+    }
+    .project-title {
+      font-family: var(--sans);
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--heading);
+      margin-bottom: .6rem;
+    }
+    .project-desc { color: var(--muted); font-size: .82rem; margin-bottom: 1.2rem; max-width: 580px; }
+    .project-stack { display: flex; gap: .5rem; flex-wrap: wrap; }
+
+    .project-links {
+      display: flex; flex-direction: column; gap: .5rem;
+      flex-shrink: 0;
+    }
+    .project-link {
+      display: inline-flex; align-items: center; gap: .4rem;
+      font-size: .75rem;
+      color: var(--muted);
+      text-decoration: none;
+      border: 1px solid var(--border);
+      padding: .35rem .75rem;
+      border-radius: 3px;
+      transition: all .2s;
+      white-space: nowrap;
+    }
+    .project-link:hover { color: var(--accent); border-color: var(--accent); }
+
+    /* ── EXPERIENCE ── */
+    #experience { border-top: 1px solid var(--border); }
+
+    .timeline { position: relative; padding-left: 2rem; }
+    .timeline::before {
+      content: '';
+      position: absolute; left: 0; top: 6px; bottom: 0;
+      width: 1px; background: var(--border);
+    }
+
+    .timeline-item { position: relative; margin-bottom: 3rem; }
+    .timeline-item::before {
+      content: '';
+      position: absolute; left: -2rem; top: 6px;
+      width: 9px; height: 9px;
+      border-radius: 50%;
+      background: var(--accent);
+      transform: translateX(-4px);
+      box-shadow: 0 0 0 3px rgba(0,229,160,.15);
+    }
+
+    .timeline-period {
+      font-size: .72rem;
+      letter-spacing: .1em;
+      color: var(--muted);
+      margin-bottom: .4rem;
+    }
+    .timeline-role {
+      font-family: var(--sans);
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--heading);
+      margin-bottom: .2rem;
+    }
+    .timeline-company { color: var(--accent); font-size: .85rem; margin-bottom: .6rem; }
+    .timeline-desc { color: var(--muted); font-size: .82rem; max-width: 580px; }
+
+    /* ── CONTACT ── */
+    #contact { border-top: 1px solid var(--border); text-align: center; }
+
+    .contact-wrap { max-width: 560px; margin: 0 auto; }
+    .contact-wrap p { color: var(--muted); font-size: .88rem; margin-bottom: 2.5rem; }
+
+    .contact-links {
+      display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;
+      margin-top: 2rem;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 1.5rem clamp(1.5rem, 5vw, 4rem);
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: .72rem;
+      color: var(--muted);
+    }
+    footer a { color: var(--muted); text-decoration: none; }
+    footer a:hover { color: var(--accent); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .fade-up { animation: fadeUp .6s both; }
+    .delay-1 { animation-delay: .1s; }
+    .delay-2 { animation-delay: .2s; }
+    .delay-3 { animation-delay: .3s; }
+    .delay-4 { animation-delay: .4s; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .hero-grid, .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      .project-card { grid-template-columns: 1fr; }
+      .project-links { flex-direction: row; }
+      nav .nav-links { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">namhj<span>4700</span></div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div class="fade-up">
+        <span class="hero-tag">Backend Developer</span>
+        <h1 class="hero-name">안녕하세요,<br /><em>양말</em>입니다.</h1>
+        <p class="hero-desc">
+          서버 아키텍처와 API 설계를 좋아하는 백엔드 개발자입니다.<br />
+          안정적이고 확장 가능한 시스템을 만드는 것에 집중합니다.
+        </p>
+        <div class="hero-btns">
+          <a href="#projects" class="btn btn-primary">▶ 프로젝트 보기</a>
+          <a href="#contact"  class="btn btn-outline">연락하기</a>
+        </div>
+      </div>
+
+      <!-- Terminal -->
+      <div class="terminal">
+        <div class="terminal-bar">
+          <span class="dot dot-r"></span>
+          <span class="dot dot-y"></span>
+          <span class="dot dot-g"></span>
+        </div>
+        <div class="terminal-body">
+          <div class="t-line"><span class="t-prompt">$</span><span class="t-cmd">whoami</span></div>
+          <div class="t-out"><span class="acc">namhj4700</span> — Backend Developer</div>
+          <br />
+          <div class="t-line"><span class="t-prompt">$</span><span class="t-cmd">cat skills.txt</span></div>
+          <div class="t-out"><span class="hi">Java</span> · <span class="hi">Spring Boot</span> · <span class="hi">Python</span></div>
+          <div class="t-out"><span class="hi">MySQL</span> · <span class="hi">Redis</span> · <span class="hi">Docker</span></div>
+          <br />
+          <div class="t-line"><span class="t-prompt">$</span><span class="t-cmd">git log --oneline -1</span></div>
+          <div class="t-out"><span class="acc">a1b2c3d</span> 포트폴리오 사이트 업데이트</div>
+          <br />
+          <div class="t-line"><span class="t-prompt">$</span><span class="t-cmd">_<span class="cursor"></span></span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="container">
+    <div class="about-grid">
+      <div>
+        <p class="section-label">// about</p>
+        <h2 class="section-title">About<br/>Me</h2>
+        <div class="about-card">
+          <h3>기본 정보</h3>
+          <div class="about-stat"><span>이름</span><span class="val">양말</span></div>
+          <div class="about-stat"><span>GitHub</span><span class="val">namhj4700-svg</span></div>
+          <div class="about-stat"><span>분야</span><span class="val">Backend Development</span></div>
+          <div class="about-stat"><span>위치</span><span class="val">Seoul, Korea</span></div>
+          <div class="about-stat"><span>상태</span><span class="val" style="color:var(--accent)">● 구직 중</span></div>
+        </div>
+      </div>
+      <div class="about-text">
+        <p>
+          백엔드 개발에 집중하며, 효율적인 API 설계와 데이터베이스 설계에 관심이 많습니다.
+          단순히 동작하는 코드를 넘어서, 유지보수하기 쉽고 확장 가능한 구조를 지향합니다.
+        </p>
+        <p>
+          Java / Spring Boot 기반의 RESTful API 개발 경험이 있으며,
+          Docker를 활용한 컨테이너 기반 개발 환경 구성에 익숙합니다.
+        </p>
+        <p>
+          문제를 만났을 때 포기하지 않고 원인을 파악하고 해결책을 찾는 과정을 즐깁니다.
+          꾸준한 기록과 코드 리뷰를 통해 성장하는 개발자가 되고자 합니다.
+        </p>
+        <div style="margin-top:2rem;">
+          <a href="https://github.com/namhj4700-svg" target="_blank" class="btn btn-outline" style="font-size:.8rem;">
+            ↗ GitHub 프로필 보기
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="container">
+    <p class="section-label">// skills</p>
+    <h2 class="section-title">Tech Stack</h2>
+    <div class="skills-grid">
+
+      <div class="skill-card">
+        <div class="skill-card-header">
+          <div class="skill-icon">☕</div>
+          <h3>언어</h3>
+        </div>
+        <div class="skill-tags">
+          <span class="tag green">Java</span>
+          <span class="tag green">Python</span>
+          <span class="tag">SQL</span>
+          <span class="tag">Shell</span>
+        </div>
+      </div>
+
+      <div class="skill-card">
+        <div class="skill-card-header">
+          <div class="skill-icon">🌿</div>
+          <h3>프레임워크 & 라이브러리</h3>
+        </div>
+        <div class="skill-tags">
+          <span class="tag green">Spring Boot</span>
+          <span class="tag green">Spring MVC</span>
+          <span class="tag">JPA / Hibernate</span>
+          <span class="tag">FastAPI</span>
+        </div>
+      </div>
+
+      <div class="skill-card">
+        <div class="skill-card-header">
+          <div class="skill-icon">🗄️</div>
+          <h3>데이터베이스</h3>
+        </div>
+        <div class="skill-tags">
+          <span class="tag green">MySQL</span>
+          <span class="tag">PostgreSQL</span>
+          <span class="tag green">Redis</span>
+          <span class="tag">MongoDB</span>
+        </div>
+      </div>
+
+      <div class="skill-card">
+        <div class="skill-card-header">
+          <div class="skill-icon">🐳</div>
+          <h3>DevOps & 인프라</h3>
+        </div>
+        <div class="skill-tags">
+          <span class="tag green">Docker</span>
+          <span class="tag">GitHub Actions</span>
+          <span class="tag">Linux</span>
+          <span class="tag">AWS</span>
+        </div>
+      </div>
+
+      <div class="skill-card">
+        <div class="skill-card-header">
+          <div class="skill-icon">🔧</div>
+          <h3>도구 & 협업</h3>
+        </div>
+        <div class="skill-tags">
+          <span class="tag green">Git</span>
+          <span class="tag">IntelliJ IDEA</span>
+          <span class="tag">Postman</span>
+          <span class="tag">Notion</span>
+        </div>
+      </div>
+
+      <div class="skill-card">
+        <div class="skill-card-header">
+          <div class="skill-icon">📡</div>
+          <h3>API & 통신</h3>
+        </div>
+        <div class="skill-tags">
+          <span class="tag green">REST API</span>
+          <span class="tag">WebSocket</span>
+          <span class="tag">JWT</span>
+          <span class="tag">OAuth 2.0</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="container">
+    <p class="section-label">// projects</p>
+    <h2 class="section-title">Projects</h2>
+    <div class="projects-list">
+
+      <div class="project-card">
+        <div>
+          <div class="project-meta">
+            <span class="project-num">01</span>
+            <span class="project-type">Personal</span>
+          </div>
+          <h3 class="project-title">프로젝트 제목을 입력하세요</h3>
+          <p class="project-desc">
+            이 프로젝트에 대한 간략한 설명을 작성해 주세요. 어떤 문제를 해결했는지,
+            어떤 기술을 사용했는지, 어떤 성과가 있었는지 간결하게 서술하면 좋습니다.
+          </p>
+          <div class="project-stack">
+            <span class="tag green">Java</span>
+            <span class="tag green">Spring Boot</span>
+            <span class="tag">MySQL</span>
+            <span class="tag">Docker</span>
+          </div>
+        </div>
+        <div class="project-links">
+          <a href="#" class="project-link">↗ GitHub</a>
+          <a href="#" class="project-link">→ Demo</a>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div>
+          <div class="project-meta">
+            <span class="project-num">02</span>
+            <span class="project-type">Team</span>
+          </div>
+          <h3 class="project-title">두 번째 프로젝트</h3>
+          <p class="project-desc">
+            팀 프로젝트라면 본인이 담당한 역할과 기여한 부분을 강조해서 작성하면
+            채용 담당자가 역량을 파악하는 데 도움이 됩니다.
+          </p>
+          <div class="project-stack">
+            <span class="tag green">Python</span>
+            <span class="tag green">FastAPI</span>
+            <span class="tag">Redis</span>
+            <span class="tag">AWS</span>
+          </div>
+        </div>
+        <div class="project-links">
+          <a href="#" class="project-link">↗ GitHub</a>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div>
+          <div class="project-meta">
+            <span class="project-num">03</span>
+            <span class="project-type">Personal</span>
+          </div>
+          <h3 class="project-title">세 번째 프로젝트</h3>
+          <p class="project-desc">
+            프로젝트에서 기술적으로 도전했던 부분이나 해결한 이슈를 서술하면
+            더욱 임팩트 있는 포트폴리오가 됩니다. GitHub 링크를 꼭 첨부하세요.
+          </p>
+          <div class="project-stack">
+            <span class="tag green">Spring Boot</span>
+            <span class="tag">JPA</span>
+            <span class="tag">PostgreSQL</span>
+            <span class="tag green">JWT</span>
+          </div>
+        </div>
+        <div class="project-links">
+          <a href="#" class="project-link">↗ GitHub</a>
+          <a href="#" class="project-link">→ Demo</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="container">
+    <p class="section-label">// experience</p>
+    <h2 class="section-title">Experience &<br/>Education</h2>
+    <div class="timeline">
+
+      <div class="timeline-item">
+        <div class="timeline-period">2024.03 — 현재</div>
+        <div class="timeline-role">백엔드 개발 공부</div>
+        <div class="timeline-company">개인 학습 / 사이드 프로젝트</div>
+        <div class="timeline-desc">
+          Spring Boot, JPA, Docker를 중심으로 백엔드 기초를 다지고 있으며,
+          GitHub에 꾸준히 학습 내용을 기록하고 있습니다.
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-period">2023 — 2024</div>
+        <div class="timeline-role">팀 프로젝트 참여</div>
+        <div class="timeline-company">교내/외 프로젝트</div>
+        <div class="timeline-desc">
+          여기에 팀 프로젝트나 협업 경험을 추가해 주세요.
+          맡은 역할과 사용한 기술 스택을 구체적으로 작성하면 좋습니다.
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-period">입학년도 — 현재 또는 졸업년도</div>
+        <div class="timeline-role">학교/전공명</div>
+        <div class="timeline-company">대학교 이름</div>
+        <div class="timeline-desc">
+          학과명, 전공, 관련 수강 과목 등을 적어 주세요.
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="container">
+    <div class="contact-wrap">
+      <p class="section-label">// contact</p>
+      <h2 class="section-title">Get In Touch</h2>
+      <p>
+        새로운 기회나 협업 제안을 환영합니다.<br />
+        언제든지 편하게 연락 주세요!
+      </p>
+      <a href="mailto:your-email@example.com" class="btn btn-primary" style="font-size:.9rem; padding:.8rem 2rem;">
+        ✉ 이메일 보내기
+      </a>
+      <div class="contact-links">
+        <a href="https://github.com/namhj4700-svg" target="_blank" class="btn btn-outline">
+          GitHub ↗
+        </a>
+        <a href="#" class="btn btn-outline">LinkedIn ↗</a>
+        <a href="#" class="btn btn-outline">Velog ↗</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <span>© 2025 namhj4700. Built with passion.</span>
+  <a href="#hero">↑ 맨 위로</a>
+</footer>
+
+<script>
+  // Intersection Observer — scroll reveal
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.animation = 'fadeUp .6s both';
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll(
+    '.skill-card, .project-card, .timeline-item, .about-card'
+  ).forEach(el => {
+    el.style.opacity = '0';
+    observer.observe(el);
+  });
+</script>
+
+</body>
+</html>
